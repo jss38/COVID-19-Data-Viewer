@@ -1,0 +1,14 @@
+#data {
+    max-width: 40%;
+}
+
+#container {
+    margin: 25px;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+h1 {
+    margin-left: 25px;
+    margin-top: 25px;
+}

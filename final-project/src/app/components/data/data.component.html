@@ -1,0 +1,112 @@
+<div id="container">
+    <h1 class="display-4">COVID-19 Data Viewer</h1>
+
+    <label>Stat: &nbsp;</label>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox1" value="new_cases" checked>
+        <label class="form-check-label" for="statCheckbox1">New Cases </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox2" value="cumulative_cases" checked>
+        <label class="form-check-label" for="statCheckbox2">Cumulative Cases</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox3" value="new_deaths" checked>
+        <label class="form-check-label" for="statCheckbox3">New Deaths</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox4" value="cumulative_deaths" checked>
+        <label class="form-check-label" for="statCheckbox4">Cumulative Deaths</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox5" value="new_recovered">
+        <label class="form-check-label" for="statCheckbox5">New Recovered</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="statCheckbox6" value="cumulative_recovered">
+        <label class="form-check-label" for="statCheckbox6">Cumulative Recovered</label>
+    </div><br><br>
+
+    <label>Location: &nbsp;</label>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="locRadio1" value="Federal" name="loc">
+        <label class="form-check-label" for="locRadio1">Federal</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="locRadio2" value="Provincial" name="loc">
+        <label class="form-check-label" for="locRadio2">Provincial</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="locRadio3" value="Regional" name="loc" checked>
+        <label class="form-check-label" for="locRadio3">Regional</label>
+    </div><br><br>
+
+    <label>Start Date: &nbsp;</label>
+    <input type="text" id="startDate" value="2021-03-01" >
+
+    <label>&nbsp; End Date: &nbsp;</label>
+    <input type="text" id="endDate" value="2022-03-01"><br><br>
+    
+    <button type="button" (click)="updateTable()" class="btn btn-primary">Update</button>
+    <button type="button" id="saveTable" (click)="saveTable()" class="btn btn-primary">Save</button>
+
+    <div id="chartDiv">
+        <h4>Cumulative Cases (Provincial)</h4>
+        <p-chart type="doughnut" width="400" height="400" [data]="data" [options]="options"></p-chart>
+    </div>
+        
+    <div id="historyDiv">
+        <h4>History</h4>
+        <table id="historyTable" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Time Saved</th>
+                    <th scope="col">Stat</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Display</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of historyData; let i = index">
+                    <td>{{ data.timeSaved }}</td>
+                    <td>{{ data.stats }}</td>
+                    <td>{{ data.loc }}</td>
+                    <td>{{ data.timePeriod }}</td>
+                    <td><button type="button" class="btn btn-primary" (click)="display(i)">Display</button></td>
+                    <td><button type="button" class="btn btn-primary" (click)="delete(i)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <h4>Data</h4>
+    <p id="date"></p>
+    <table id="data" class="table">
+        <thead>
+            <tr>
+                <th scope="col">Province</th>
+                <th scope="col" *ngIf="region">Region</th>
+                <th scope="col" *ngIf="inputValues[0]">New Cases</th>
+                <th scope="col" *ngIf="inputValues[1]">Cumulative Cases</th>
+                <th scope="col" *ngIf="inputValues[2]">New Deaths</th>
+                <th scope="col" *ngIf="inputValues[3]">Cumulative Deaths</th>
+                <th scope="col" *ngIf="inputValues[4]">New Recovered</th>
+                <th scope="col" *ngIf="inputValues[5]">Cumulative Recovered</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr *ngFor="let startData of startDateArray; let i = index;">
+                <td>{{ startData.province }}</td>
+                <td *ngIf="region">{{ startData.health_region }}</td>
+                <td *ngIf="inputValues[0]">{{ endDateArray[i].cumulative_cases - startData.cumulative_cases }}</td>
+                <td *ngIf="inputValues[1]">{{ endDateArray[i].cumulative_cases }}</td>
+                <td *ngIf="inputValues[2]">{{ endDateArray[i].cumulative_deaths - startData.cumulative_deaths }}</td>
+                <td *ngIf="inputValues[3]">{{ endDateArray[i].cumulative_deaths }}</td>
+                <td *ngIf="inputValues[4]">{{ endDateArray[i].cumulative_recovered - startData.cumulative_recovered }}</td>
+                <td *ngIf="inputValues[5]">{{ endDateArray[i].cumulative_recovered }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
